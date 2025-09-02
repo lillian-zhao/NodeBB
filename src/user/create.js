@@ -155,18 +155,15 @@ module.exports = function (User) {
 
 	//THE FOLLOWING CREATE function was WRITTEN WITH THE HELP OF CHATGPT TO REDUCE THE cyclomatic complexity count 11
 	async function create(data, User) {
-		console.log('This is BEFORE my refactored code!!!');
 		const timestamp = data.timestamp || Date.now();
 		let userData = buildUserData(data, timestamp);
 		userData = await ensureUniqueUsername(userData, User);
 		userData = await applyPluginFilters(userData, data);
 		const { uid, isFirstUser } = await assignUid();
-		console.log('This is IN THE MIDDLE OF my refactored code!!!');
 		userData.uid = uid;
 		await saveUserToDb(userData, timestamp);
 		await runPostCreationTasks({ userData, data, isFirstUser, User });
 		plugins.hooks.fire('action:user.create', { user: userData, data });
-		console.log('This is AFTER my refactored code!!!');
 		return userData.uid;
 
 	}
